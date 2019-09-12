@@ -1,3 +1,5 @@
+# _*_ coding: utf-8 _*_
+
 import pdfkit
 import os
 from urllib.request import urlopen
