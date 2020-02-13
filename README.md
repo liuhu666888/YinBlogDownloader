@@ -21,6 +21,7 @@ wkhtmltopdf二进制文件到路径添加到PATH下。
 
 # 执行方法
 * 安装python3
-* 执行命令: > python3 crawler.py
+* 执行命令: 
+> python3 crawler.py
 
 
