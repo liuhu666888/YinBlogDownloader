@@ -2,30 +2,28 @@
 
 import pdfkit
 import os
-from urllib.request import urlopen
+import requests
 from bs4 import BeautifulSoup
+import time
 
 
 # 获取标题列表
 def get_title_list():
-    soup = urlopen('http://www.yinwang.org')
-    content = BeautifulSoup(soup.read(), 'html.parser')
-    title_list = []
-    content_list = content.find_all('li', 'list-group-item')
-    for text in content_list:
-        title_list.append(text.get_text().strip())
-    return title_list
+    soup = requests.get('http://www.yinwang.org')
+    content = BeautifulSoup(soup.text,'html.parser')
+    titles = []
+    for text in content.find_all('li', 'list-group-item'):
+        titles.append(text.a.string)
+    return titles
 
 
 # 获取所有页面url
 def get_url_list():
-    soup = urlopen('http://www.yinwang.org')
-    content = BeautifulSoup(soup.read(), 'html.parser')
-    menu_tag = content.find_all(class_='list-group-item')
+    soup = requests.get('http://www.yinwang.org')
+    content = BeautifulSoup(soup.text, 'html.parser')
     urls = []
-    for li in menu_tag:
-        url = "http://www.yinwang.org" + li.a.get('href')
-        urls.append(url)
+    for li in content.find_all(class_='list-group-item'):
+        urls.append("http://www.yinwang.org" + li.a.get('href'))
     return urls
 
 # 将html页面保存到本地
@@ -50,15 +48,16 @@ def saveCurrUrList(urls, filename, mode = 'a'):
     file.close()
 
 if __name__ == '__main__':
-    urls = get_title_list()
-    for i in range(73, 77):
-        urls = get_url_list()
-        title_list = get_title_list()
-        print(title_list[i])
-        soup = urlopen(urls[i])
-        content = BeautifulSoup(soup.read(), 'html.parser')
-        saveHtml(os.getcwd() + '/html/' + title_list[i] + '.html', content.encode())
-        savePDF(urls[i], os.getcwd() + '/pdf/' + title_list[i] + ".pdf")
+    urls = get_url_list()
+    titles = get_title_list()
+    start = 0
+    end = len(urls)
+    for i in range(start, end):
+        soup = requests.get(urls[i])
+        content = BeautifulSoup(soup.text, 'html.parser')
+        saveHtml(os.getcwd() + '/html/' + titles[i] + '.html', content.encode())
+        print(titles[i] + "----成功保存!")
+        savePDF(urls[i], os.getcwd() + '/pdf/' + titles[i] + ".pdf")
 
 
 
