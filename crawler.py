@@ -56,8 +56,8 @@ if __name__ == '__main__':
         soup = requests.get(urls[i])
         content = BeautifulSoup(soup.text, 'html.parser')
         saveHtml(os.getcwd() + '/html/' + titles[i] + '.html', content.encode())
-        print(titles[i] + "----成功保存!")
-        savePDF(urls[i], os.getcwd() + '/pdf/' + titles[i] + ".pdf")
+        #savePDF(urls[i], os.getcwd() + '/pdf/' + titles[i] + ".pdf")
+        print("第", i, "篇博客《", titles[i], "》成功保存!")
 
 
 
